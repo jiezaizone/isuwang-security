@@ -11,5 +11,13 @@
 
     <artifactId>isuwang-security-app</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.isuwang.security</groupId>
+            <artifactId>isuwang-security-core</artifactId>
+            <version>${isuwang.security.version}</version>
+        </dependency>
+    </dependencies>
+
 
 </project>
