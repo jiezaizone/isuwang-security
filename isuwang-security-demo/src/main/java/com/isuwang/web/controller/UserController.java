@@ -26,9 +26,10 @@ public class UserController {
     @RequestMapping(value = "/user/{id:\\d+}", method = RequestMethod.GET )
     @JsonView(User.UserDetailView.class)
     public User getInfo(@PathVariable String id) {
-        throw  new UserNotExitExection(id);
-//        User user = new User();
-//        user.setUsername("tom");
-//        return user;
+//        throw  new UserNotExitExection(id);
+        System.out.println("调用服务");
+        User user = new User();
+        user.setUsername("tom");
+        return user;
     }
 }
