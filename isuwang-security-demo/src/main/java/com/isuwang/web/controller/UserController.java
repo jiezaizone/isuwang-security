@@ -2,6 +2,7 @@ package com.isuwang.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.isuwang.dto.User;
+import com.isuwang.exection.UserNotExitExection;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,9 @@ public class UserController {
     @RequestMapping(value = "/user/{id:\\d+}", method = RequestMethod.GET )
     @JsonView(User.UserDetailView.class)
     public User getInfo(@PathVariable String id) {
-        User user = new User();
-        user.setUsername("tom");
-        return user;
+        throw  new UserNotExitExection(id);
+//        User user = new User();
+//        user.setUsername("tom");
+//        return user;
     }
 }

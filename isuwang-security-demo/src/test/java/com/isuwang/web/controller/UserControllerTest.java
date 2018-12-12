@@ -55,4 +55,12 @@ public class UserControllerTest  {
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
      }
+
+    @Test
+    public void whenCreateSuccess() throws Exception {
+         String content = "";
+        mockMvc.perform(MockMvcRequestBuilders.post("/user")
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }
