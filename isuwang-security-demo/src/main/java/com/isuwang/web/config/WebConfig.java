@@ -12,7 +12,7 @@ import java.util.List;
 public class WebConfig {
 
 
-    @Bean
+    /*@Bean
     public FilterRegistrationBean timeFilter(){
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         TimeFilter timeFilter = new TimeFilter();
@@ -21,5 +21,5 @@ public class WebConfig {
         urls.add("/*");
         registrationBean.setUrlPatterns(urls);
         return registrationBean;
-    }
+    }*/
 }
