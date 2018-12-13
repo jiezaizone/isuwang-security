@@ -1,5 +1,7 @@
 package com.isuwang.security.browser;
 
+import com.isuwang.security.core.properties.SecurityProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,6 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
+
+
+    @Autowired
+    private SecurityProperties securityProperties;
 
     /**
      * 配置一个密码加密器
@@ -24,11 +30,11 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 //        super.configure(http);
 
         http.formLogin()  // 配置表单访问
-                .loginPage("/isuwang-login.html")
+                .loginPage("/authentication/required")
                 .loginProcessingUrl("/isuwang/login")
                 .and()
                 .authorizeRequests()  // 配置验证配置
-                .antMatchers("/isuwang-login.html")
+                .antMatchers("/authentication/required",securityProperties.getBrowserProperties().getLoginPage())
                 .permitAll()
                 .anyRequest()  // 所有的请求都要通过验证
                 .authenticated()
