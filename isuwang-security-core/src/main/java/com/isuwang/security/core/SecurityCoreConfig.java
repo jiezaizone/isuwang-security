@@ -1,4 +1,4 @@
-package com.isuwang.security.core.properties.com.isuwang.security.core;
+package com.isuwang.security.core;
 
 import com.isuwang.security.core.properties.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;

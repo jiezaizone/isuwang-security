@@ -51,7 +51,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(isuwangAuthenticationFailureHandler)
                 .and()
                 .authorizeRequests()  // 配置验证配置
-                .antMatchers("/authentication/required",securityProperties.getBrowserProperties().getLoginPage())
+                .antMatchers("/authentication/required",securityProperties.getBrowser().getLoginPage())
                 .permitAll()
                 .anyRequest()  // 所有的请求都要通过验证
                 .authenticated()
