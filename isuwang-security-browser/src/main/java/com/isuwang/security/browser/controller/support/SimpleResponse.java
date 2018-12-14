@@ -1,4 +1,4 @@
-package com.isuwang.security.controller.support;
+package com.isuwang.security.browser.controller.support;
 
 public class SimpleResponse {
 
