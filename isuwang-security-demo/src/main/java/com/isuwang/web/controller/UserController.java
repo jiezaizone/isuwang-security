@@ -5,6 +5,8 @@ import com.isuwang.dto.User;
 import com.isuwang.exection.UserNotExitExection;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,6 +23,11 @@ public class UserController {
         users.add(new User());
         users.add(new User());
         return users;
+    }
+
+    @RequestMapping(value = "/me", method = RequestMethod.GET )
+    public Object me() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 
     @RequestMapping(value = "/user/{id:\\d+}", method = RequestMethod.GET )
