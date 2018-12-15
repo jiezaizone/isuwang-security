@@ -5,7 +5,7 @@ import com.isuwang.security.core.vaildate.code.ValidateCodeGenerator;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
 
-@Component("imageCodeGenerator")
+//@Component("imageCodeGenerator")
 public class DemoImageCodeGenerator implements ValidateCodeGenerator {
 
     @Override

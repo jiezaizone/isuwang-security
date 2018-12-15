@@ -9,11 +9,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -37,6 +42,12 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationFailureHandler isuwangAuthenticationFailureHandler;
 
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     /**
      * 配置一个密码加密器
      * @return
@@ -44,6 +55,14 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(){
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        //tokenRepository.setCreateTableOnStartup(true); //启动时候系统自动创建表
+        return tokenRepository;
     }
 
     @Override
@@ -59,10 +78,15 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.addFilterBefore(validateCodeFilter , UsernamePasswordAuthenticationFilter.class) //在用户密码校验之前加入自定义（验证码校验拦截器）拦截器
                 .formLogin()  // 配置表单访问
-                .loginPage("/authentication/required")
-                .loginProcessingUrl("/isuwang/login")
-                .successHandler(isuwangAuthenticationSuccessHandler)
-                .failureHandler(isuwangAuthenticationFailureHandler)
+                    .loginPage("/authentication/required")
+                    .loginProcessingUrl("/isuwang/login")
+                    .successHandler(isuwangAuthenticationSuccessHandler)
+                    .failureHandler(isuwangAuthenticationFailureHandler)
+                    .and()
+                .rememberMe()
+                    .tokenRepository(persistentTokenRepository())
+                    .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
+                    .userDetailsService(userDetailsService)
                 .and()
                 .authorizeRequests()  // 配置验证配置
                 .antMatchers("/authentication/required",
