@@ -4,7 +4,6 @@ import com.isuwang.security.core.properties.SecurityProperties;
 import com.isuwang.security.core.vaildate.code.sms.DefaultSmsCodeSender;
 import com.isuwang.security.core.vaildate.code.sms.SmsCodeSender;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,8 +33,8 @@ public class ValidateCodeBeanConfig {
      * @return
      */
     @Bean
-    @ConditionalOnMissingBean(SmsCodeSender.class)
-    public SmsCodeSender smsCodeGenerator(){
+    @ConditionalOnMissingBean(name = "smsCodeSender")
+    public SmsCodeSender smsCodeSender(){
         return new DefaultSmsCodeSender();
     }
 }

@@ -91,7 +91,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()  // 配置验证配置
                 .antMatchers("/authentication/required",
                         securityProperties.getBrowser().getLoginPage(),
-                        "/code/sms","/code/image")
+                        "/code/*")
                 .permitAll()
                 .anyRequest()  // 所有的请求都要通过验证
                 .authenticated()

@@ -9,7 +9,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 public class DemoImageCodeGenerator implements ValidateCodeGenerator {
 
     @Override
-    public ImageCode generate(ServletWebRequest request) {
+    public ImageCode generator(ServletWebRequest request) {
         System.out.println("更高级的图形验证码生产代码");
         return null;
     }
