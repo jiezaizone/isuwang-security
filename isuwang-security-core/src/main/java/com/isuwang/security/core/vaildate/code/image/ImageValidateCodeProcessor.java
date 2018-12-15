@@ -1,4 +1,4 @@
-package com.isuwang.security.core.vaildate.code;
+package com.isuwang.security.core.vaildate.code.image;
 
 import com.isuwang.security.core.vaildate.code.impl.AbstractValidateCodeProcessor;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,6 @@
-package com.isuwang.security.core.vaildate.code;
+package com.isuwang.security.core.vaildate.code.image;
+
+import com.isuwang.security.core.vaildate.code.ValidateCode;
 
 import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;

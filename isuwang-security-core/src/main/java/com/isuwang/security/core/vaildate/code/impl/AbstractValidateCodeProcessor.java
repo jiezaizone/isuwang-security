@@ -11,6 +11,10 @@ import org.springframework.web.context.request.ServletWebRequest;
 
 import java.util.Map;
 
+
+/**
+ * 抽象的验证码处理器
+ */
 public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> implements ValidateCodeProcessor {
 
     /**

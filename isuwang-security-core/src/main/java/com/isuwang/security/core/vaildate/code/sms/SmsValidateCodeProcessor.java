@@ -1,5 +1,6 @@
-package com.isuwang.security.core.vaildate.code;
+package com.isuwang.security.core.vaildate.code.sms;
 
+import com.isuwang.security.core.vaildate.code.ValidateCode;
 import com.isuwang.security.core.vaildate.code.impl.AbstractValidateCodeProcessor;
 import com.isuwang.security.core.vaildate.code.sms.SmsCodeSender;
 import org.springframework.beans.factory.annotation.Autowired;

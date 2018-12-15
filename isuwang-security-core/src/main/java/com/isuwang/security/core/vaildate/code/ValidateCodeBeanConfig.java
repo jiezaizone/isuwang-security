@@ -1,6 +1,7 @@
 package com.isuwang.security.core.vaildate.code;
 
 import com.isuwang.security.core.properties.SecurityProperties;
+import com.isuwang.security.core.vaildate.code.image.ImageCodeGenerator;
 import com.isuwang.security.core.vaildate.code.sms.DefaultSmsCodeSender;
 import com.isuwang.security.core.vaildate.code.sms.SmsCodeSender;
 import org.springframework.beans.factory.annotation.Autowired;
