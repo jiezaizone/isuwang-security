@@ -4,6 +4,8 @@ import com.isuwang.security.core.vaildate.code.ValidateCode;
 import com.isuwang.security.core.vaildate.code.ValidateCodeGenerator;
 import com.isuwang.security.core.vaildate.code.ValidateCodeProcessor;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
@@ -16,6 +18,8 @@ import java.util.Map;
  * 抽象的验证码处理器
  */
 public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> implements ValidateCodeProcessor {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      *  操作session 工具类
@@ -45,7 +49,9 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     private C generate(ServletWebRequest request) throws Exception {
         String type = getProcessorType(request);
         ValidateCodeGenerator validateCodeGenerator = validateCodeGenerators.get(type + "CodeGenerator");
-        return (C) validateCodeGenerator.generator(request);
+        C validateCode = (C) validateCodeGenerator.generator(request);
+        logger.info("generate code:" + validateCode.getCode());
+        return validateCode;
     }
 
     /**

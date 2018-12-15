@@ -1,7 +1,9 @@
 package com.isuwang.security.browser;
 
 import com.isuwang.security.core.authentication.mobile.SmsCodeAuthenticationFilter;
+import com.isuwang.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.isuwang.security.core.properties.SecurityProperties;
+import com.isuwang.security.core.vaildate.code.SmsCodeFilter;
 import com.isuwang.security.core.vaildate.code.ValidateCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -46,6 +49,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+
     /**
      * 配置一个密码加密器
      * @return
@@ -74,7 +80,13 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         validateCodeFilter.afterPropertiesSet(); //调用初始化方法
 
 
-        http.addFilterBefore(validateCodeFilter , SmsCodeAuthenticationFilter.class) //在用户密码校验之前加入自定义（验证码校验拦截器）拦截器
+        SmsCodeFilter smsCodeFilter = new SmsCodeFilter();
+        smsCodeFilter.setAuthenticationFailureHandler(isuwangAuthenticationFailureHandler);
+        smsCodeFilter.setSecurityProperties(securityProperties);
+        smsCodeFilter.afterPropertiesSet(); //调用初始化方法
+
+        http.addFilterBefore(validateCodeFilter , UsernamePasswordAuthenticationFilter.class) //在用户密码校验之前加入自定义（验证码校验拦截器）拦截器
+                .addFilterBefore(smsCodeFilter , UsernamePasswordAuthenticationFilter.class)
                 .formLogin()  // 配置表单访问
                     .loginPage("/authentication/required")
                     .loginProcessingUrl("/authentication/login")
@@ -94,7 +106,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()  // 所有的请求都要通过验证
                 .authenticated()
                 .and()
-                .csrf().disable();
+                .csrf().disable()
+        .apply(smsCodeAuthenticationSecurityConfig);
 
     }
 }
