@@ -34,5 +34,27 @@
         </table>
     </form>
 
+    <h2>短信登录</h2>
+    <form action="/isuwang/mobile-login" method="post">
+        <table>
+            <tr>
+                <td>mobile:</td>
+                <td><input type='text' name='mobile' value='13600000000'>
+                </td>
+            </tr>
+            <tr>
+                <td>sms code:</td>
+                <td>
+                    <input type='text' name='smsCode'/>
+                    <a href="/code/sms?mobile=13600000000">send code</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2'><input name="submit" type="submit" value="Login"/></td>
+            </tr>
+
+        </table>
+    </form>
+
 </body>
 </html>

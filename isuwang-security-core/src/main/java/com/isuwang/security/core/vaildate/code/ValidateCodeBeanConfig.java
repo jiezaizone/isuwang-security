@@ -1,6 +1,8 @@
 package com.isuwang.security.core.vaildate.code;
 
 import com.isuwang.security.core.properties.SecurityProperties;
+import com.isuwang.security.core.vaildate.code.sms.DefaultSmsCodeSender;
+import com.isuwang.security.core.vaildate.code.sms.SmsCodeSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -25,5 +27,15 @@ public class ValidateCodeBeanConfig {
         ImageCodeGenerator codeGenerator = new ImageCodeGenerator();
         codeGenerator.setSecurityProperties(securityProperties);
         return codeGenerator;
+    }
+
+    /**
+     * 注入短信发送器
+     * @return
+     */
+    @Bean
+    @ConditionalOnMissingBean(SmsCodeSender.class)
+    public SmsCodeSender smsCodeGenerator(){
+        return new DefaultSmsCodeSender();
     }
 }
