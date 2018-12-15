@@ -1,10 +1,15 @@
 package com.isuwang.security.core.vaildate.code;
 
+import com.isuwang.security.core.properties.SecurityProperties;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -16,24 +21,48 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * OncePerRequestFilter spring提高的工具类，保证在过滤链中每次只会被调用一次
  */
-public class ValidateCodeFilter extends OncePerRequestFilter {
+public class ValidateCodeFilter extends OncePerRequestFilter implements InitializingBean {
 
-//    @Autowired
+    //登录失败处理器
     private AuthenticationFailureHandler authenticationFailureHandler;
 
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
+    private Set<String> urls = new HashSet<>();
 
+    private SecurityProperties securityProperties;
+
+    private AntPathMatcher pathMatcher = new AntPathMatcher();
+
+    @Override
+    public void afterPropertiesSet() throws ServletException {
+        super.afterPropertiesSet();
+        String[] configUrls  =  StringUtils.splitByWholeSeparatorPreserveAllTokens(securityProperties.getCode().getImage().getUrl(),",");
+        for(String configUrl :configUrls){
+            urls.add(configUrl);
+        }
+        urls.add("/isuwang/login");
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        if(StringUtils.equals("/isuwang/login",request.getRequestURI())
-            && StringUtils.equalsIgnoreCase(request.getMethod(),"post")){
+        // 判断请求是否需要进行验证码校验
+        boolean action = false;
+        for (String url :urls){
+            if(pathMatcher.match(url, request.getRequestURI())){
+                action = true;
+            }
+        }
+
+        if(action){
+
             try {
 
                 validate(new ServletWebRequest(request));
@@ -46,10 +75,22 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
         filterChain.doFilter(request,response);
     }
 
+    /**
+     * 验证码校验
+     * @param request
+     * @throws ServletRequestBindingException
+     */
     private void validate(ServletWebRequest request) throws ServletRequestBindingException {
         ImageCode codeInSession = (ImageCode) sessionStrategy.getAttribute(request, ValidateCodeController.SESSION_KEY);
 
-        String codeInRequired = ServletRequestUtils.getRequiredStringParameter(request.getRequest(),"imageCode");
+        String codeInRequired = "";
+
+        try{
+            codeInRequired = ServletRequestUtils.getRequiredStringParameter(request.getRequest(),"imageCode");
+        }catch (MissingServletRequestParameterException e){
+            logger.info(e.getMessage());
+        }
+
 
         if(StringUtils.isBlank(codeInRequired)){
             throw new ValidateCodeExection("验证码的值不能为空");
@@ -86,5 +127,21 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
 
     public void setSessionStrategy(SessionStrategy sessionStrategy) {
         this.sessionStrategy = sessionStrategy;
+    }
+
+    public Set<String> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(Set<String> urls) {
+        this.urls = urls;
+    }
+
+    public SecurityProperties getSecurityProperties() {
+        return securityProperties;
+    }
+
+    public void setSecurityProperties(SecurityProperties securityProperties) {
+        this.securityProperties = securityProperties;
     }
 }

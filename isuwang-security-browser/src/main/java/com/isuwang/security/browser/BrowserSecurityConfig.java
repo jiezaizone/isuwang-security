@@ -19,6 +19,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
+    /**
+     * 注入security配置
+     */
     @Autowired
     private SecurityProperties securityProperties;
 
@@ -47,8 +50,12 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 //        super.configure(http);
 
+        // 定义要添加的拦截器
         ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
         validateCodeFilter.setAuthenticationFailureHandler(isuwangAuthenticationFailureHandler);
+        validateCodeFilter.setSecurityProperties(securityProperties);
+        validateCodeFilter.afterPropertiesSet(); //调用初始化方法
+
 
         http.addFilterBefore(validateCodeFilter , UsernamePasswordAuthenticationFilter.class) //在用户密码校验之前加入自定义（验证码校验拦截器）拦截器
                 .formLogin()  // 配置表单访问
