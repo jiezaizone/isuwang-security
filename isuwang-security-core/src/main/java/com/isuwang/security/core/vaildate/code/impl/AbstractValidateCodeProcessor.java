@@ -1,14 +1,15 @@
 package com.isuwang.security.core.vaildate.code.impl;
 
-import com.isuwang.security.core.vaildate.code.ValidateCode;
-import com.isuwang.security.core.vaildate.code.ValidateCodeGenerator;
-import com.isuwang.security.core.vaildate.code.ValidateCodeProcessor;
+import com.isuwang.security.core.vaildate.code.*;
+import com.isuwang.security.core.vaildate.code.enums.ValidateCodeType;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import java.util.Map;
@@ -31,6 +32,9 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
      */
     @Autowired
     private Map<String, ValidateCodeGenerator> validateCodeGenerators;
+
+    @Autowired
+    private ValidateCodeRepository validateCodeRepository;
 
     @Override
     public void create(ServletWebRequest request) throws Exception {
@@ -61,8 +65,8 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
      * @param validateCode
      */
     protected void save(ServletWebRequest request, C validateCode) {
-//        validateCodeRepository.save(request, validateCode, getValidateCodeType(request));
-        sessionStrategy.setAttribute(request,SESSION_KEY_PREFIX + getProcessorType(request).toUpperCase(),validateCode);
+        validateCodeRepository.save(request, validateCode, getValidateCodeType(request));
+//        sessionStrategy.setAttribute(request,SESSION_KEY_PREFIX + getProcessorType(request).toUpperCase(),validateCode);
     }
 
     /**
@@ -76,6 +80,53 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
 
     private String getProcessorType(ServletWebRequest request) {
         return StringUtils.substringAfter(request.getRequest().getRequestURI(), "/code/");
+    }
+
+    /**
+     * 根据请求的url获取校验码的类型
+     *
+     * @param request
+     * @return
+     */
+    private ValidateCodeType getValidateCodeType(ServletWebRequest request) {
+        // 截取当前具体类的前缀SimpleName， 抽象类的实现类
+        String type = StringUtils.substringBefore(getClass().getSimpleName(), "ValidateCodeProcess");
+        return ValidateCodeType.valueOf(type.toUpperCase());
+    }
+
+    @Override
+    public void validate(ServletWebRequest request) {
+
+        ValidateCodeType codeType = getValidateCodeType(request);
+        //获取session中的验证码
+        C codeInSession = (C) validateCodeRepository.get(request, codeType);
+
+        String codeInRequest;
+        try {
+            // 获取request携带的验证码
+            codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), codeType.getParamNameOnValidate());
+        } catch (ServletRequestBindingException e) {
+            throw new ValidateCodeException("获取验证码的值失败");
+        }
+
+        if (StringUtils.isBlank(codeInRequest)) {
+            throw new ValidateCodeException(codeType + "验证码的值不能为空");
+        }
+
+        if (codeInSession == null) {
+            throw new ValidateCodeException(codeType + "验证码不存在");
+        }
+
+        if (codeInSession.isExpired()) {
+            validateCodeRepository.remove(request, codeType);
+            throw new ValidateCodeException(codeType + "验证码已过期");
+        }
+
+        if (!StringUtils.equals(codeInSession.getCode(), codeInRequest)) {
+            throw new ValidateCodeException(codeType + "验证码不匹配");
+        }
+        // 成功则删除session validateCode
+        validateCodeRepository.remove(request, codeType);
     }
 
 

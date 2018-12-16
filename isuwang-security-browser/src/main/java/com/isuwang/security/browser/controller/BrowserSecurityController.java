@@ -25,8 +25,10 @@ public class BrowserSecurityController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    // 原请求信息的缓存及恢复
     private RequestCache requestCache = new HttpSessionRequestCache();
 
+    // 用于重定向
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Autowired
@@ -47,7 +49,7 @@ public class BrowserSecurityController {
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if(savedRequest!= null){
             String target = savedRequest.getRedirectUrl();
-            logger.info("target:"+target);
+            logger.info("target url:"+target);
             if(StringUtils.endsWithIgnoreCase(target, ".html")){
 
                 redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getLoginPage());

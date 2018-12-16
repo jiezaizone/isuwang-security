@@ -2,9 +2,9 @@ package com.isuwang.security.core.vaildate.code;
 
 import org.springframework.security.core.AuthenticationException;
 
-public class ValidateCodeExection extends AuthenticationException {
+public class ValidateCodeException extends AuthenticationException {
 
-    public ValidateCodeExection(String msg) {
+    public ValidateCodeException(String msg) {
         super(msg);
     }
 }
