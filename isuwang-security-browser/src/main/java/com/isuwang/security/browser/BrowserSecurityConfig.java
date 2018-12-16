@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
 
@@ -44,6 +45,12 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    /**
+     * 第三方登录配置
+     */
+    @Autowired
+    private SpringSocialConfigurer socialSecurityConfigurer;
+
 
 
     /**
@@ -72,6 +79,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.apply(validateCodeSecurityConfig)
                 .and()
                 .apply(smsCodeAuthenticationSecurityConfig)
+                .and()
+                .apply(socialSecurityConfigurer)
                 .and()
                 .rememberMe()
                 .tokenRepository(persistentTokenRepository())

@@ -4,6 +4,11 @@ import java.io.IOException;
 
 public interface QQ {
 
-    QQUserInfo getUserInfo() throws IOException;
+    /**
+     * 获取QQ用户信息
+     * @return
+     * @throws IOException
+     */
+    QQUserInfo getUserInfo();
 
 }

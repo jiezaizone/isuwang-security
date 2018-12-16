@@ -9,10 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.social.security.SocialUser;
+import org.springframework.social.security.SocialUserDetails;
+import org.springframework.social.security.SocialUserDetailsService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MyUserDetailsService implements UserDetailsService {
+public class MyUserDetailsService implements UserDetailsService , SocialUserDetailsService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -21,11 +24,26 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //根据用户名查找用户信息
-        logger.info("user login name:"+username);
+        logger.info("form user login name:"+username);
 
-        //根据查找用户判断用户信息是否被冻结
-        return new User(username,passwordEncoder.encode("123456"),
-                true,true,true,true,
-                AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+        return buildUser(username);
+    }
+
+    @Override
+    public SocialUserDetails loadUserByUserId(String userId) throws UsernameNotFoundException {
+        //根据用户名查找用户信息
+        logger.info("socile user login userId:"+userId);
+
+        return buildUser(userId);
+    }
+
+    private SocialUserDetails buildUser(String userId) {
+        // TODO 模拟数据库登录方式
+        logger.info("登录用户名：" + userId);
+        String password = passwordEncoder.encode("123456");
+        logger.info("数据库密码是：" + password);
+        return new SocialUser(userId, password,
+                true, true, true, true,
+                AuthorityUtils.commaSeparatedStringToAuthorityList("admin,ROLE_USER"));
     }
 }
