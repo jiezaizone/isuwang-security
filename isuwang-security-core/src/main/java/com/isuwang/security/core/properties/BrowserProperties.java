@@ -5,7 +5,9 @@ public class BrowserProperties {
     /**
      * 配置登录页面，并设置默认登录页面
      */
-    private String loginPage = "/isuwang-login.html";
+    private String loginPage = SecurityConstants.DEFAULT_LOGIN_PAGE_URL;
+
+    private String signUpUrl=SecurityConstants.DEFAULT_SIGNIN_PAGE_URL;
 
     /**
      * 配置登录成功返回（是页面跳转／返回JSON），默认返回JSON
@@ -39,5 +41,13 @@ public class BrowserProperties {
 
     public void setRememberMeSeconds(int rememberMeSeconds) {
         this.rememberMeSeconds = rememberMeSeconds;
+    }
+
+    public String getSignUpUrl() {
+        return signUpUrl;
+    }
+
+    public void setSignUpUrl(String signUpUrl) {
+        this.signUpUrl = signUpUrl;
     }
 }

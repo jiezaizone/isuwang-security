@@ -27,7 +27,13 @@ public interface SecurityConstants {
     /**
      * 默认登录页面
      */
-    String DEFAULT_SIGN_IN_PAGE_URL = "/login_in.html";
+    String DEFAULT_LOGIN_PAGE_URL = "/isuwang-login.html";
+
+    /**
+     * 默认注册页
+     */
+   String DEFAULT_SIGNIN_PAGE_URL = "/isuwang-signUp.html";
+
     /**
      * 验证图片验证码时，http请求中默认的携带图片验证码信息的参数的名称
      */
