@@ -1,6 +1,8 @@
-package com.isuwang.security.core.vaildate.code;
+package com.isuwang.security.core.vaildate.code.controller;
 
 import com.isuwang.security.core.properties.SecurityProperties;
+import com.isuwang.security.core.vaildate.code.ValidateCodeGenerator;
+import com.isuwang.security.core.vaildate.code.ValidateCodeProcessor;
 import com.isuwang.security.core.vaildate.code.sms.SmsCodeSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +30,9 @@ public class ValidateCodeController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    public static final String SESSION_KEY = "SESSION_IMAGE_KEY";
-
-    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
+//    public static final String SESSION_KEY = "SESSION_IMAGE_KEY";
+//
+//    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
     @Autowired
     private Map<String, ValidateCodeProcessor> validateCodeProcessors;

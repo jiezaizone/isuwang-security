@@ -1,5 +1,7 @@
-package com.isuwang.security.core.vaildate.code;
+package com.isuwang.security.browser.validate.code;
 
+import com.isuwang.security.core.vaildate.code.ValidateCode;
+import com.isuwang.security.core.vaildate.code.ValidateCodeRepository;
 import com.isuwang.security.core.vaildate.code.enums.ValidateCodeType;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;

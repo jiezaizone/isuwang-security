@@ -1,4 +1,4 @@
-package com.isuwang.security.core.vaildate.code.impl;
+package com.isuwang.security.core.vaildate.code;
 
 import com.isuwang.security.core.vaildate.code.*;
 import com.isuwang.security.core.vaildate.code.enums.ValidateCodeType;

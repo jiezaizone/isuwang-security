@@ -1,6 +1,6 @@
 package com.isuwang.security.core.vaildate.code.image;
 
-import com.isuwang.security.core.vaildate.code.impl.AbstractValidateCodeProcessor;
+import com.isuwang.security.core.vaildate.code.AbstractValidateCodeProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
 
