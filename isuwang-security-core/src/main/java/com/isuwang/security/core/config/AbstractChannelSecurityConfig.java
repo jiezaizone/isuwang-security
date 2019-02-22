@@ -1,4 +1,4 @@
-package com.isuwang.security.browser.config;
+package com.isuwang.security.core.config;
 
 import com.isuwang.security.core.properties.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +11,7 @@ import org.springframework.stereotype.Component;
 /**
  * 表单登录配置
  */
-@Component
-public class FormAuthenticationConfig {
+public class AbstractChannelSecurityConfig extends WebSecurityConfigurerAdapter{
 
     /**
      * 注入校验成功处理器
@@ -26,11 +25,11 @@ public class FormAuthenticationConfig {
     @Autowired
     private AuthenticationFailureHandler isuwangAuthenticationFailureHandler;
 
-    public void configure(HttpSecurity http)throws Exception{
+    public void applyPasswordAuthenticationConfig(HttpSecurity http)throws Exception{
 
         http.formLogin()
                 .loginPage(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
-                .loginProcessingUrl(SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM)
+                .loginProcessingUrl(SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM) //自定义登录请求拦截URL
                 .successHandler(isuwangAuthenticationSuccessHandler)
                 .failureHandler(isuwangAuthenticationFailureHandler);
     }

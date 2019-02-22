@@ -17,6 +17,11 @@
             <artifactId>isuwang-security-browser</artifactId>
             <version>${isuwang.security.version}</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.isuwang.security</groupId>-->
+            <!--<artifactId>isuwang-security-app</artifactId>-->
+            <!--<version>${isuwang.security.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

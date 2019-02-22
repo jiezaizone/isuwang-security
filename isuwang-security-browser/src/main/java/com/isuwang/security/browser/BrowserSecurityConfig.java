@@ -1,6 +1,6 @@
 package com.isuwang.security.browser;
 
-import com.isuwang.security.browser.config.FormAuthenticationConfig;
+import com.isuwang.security.core.config.AbstractChannelSecurityConfig;
 import com.isuwang.security.browser.config.ValidateCodeAuthenticationSecurityConfig;
 import com.isuwang.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.isuwang.security.core.properties.SecurityConstants;
@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.social.security.SpringSocialConfigurer;
@@ -20,7 +17,7 @@ import org.springframework.social.security.SpringSocialConfigurer;
 import javax.sql.DataSource;
 
 @Configuration
-public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
+public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 
 
     /**
@@ -36,8 +33,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
 
 
-    @Autowired
-    private FormAuthenticationConfig formAuthenticationConfig;
+//    @Autowired
+//    private AbstractChannelSecurityConfig formAuthenticationConfig;
 
     @Autowired
     private DataSource dataSource;
@@ -51,17 +48,6 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SpringSocialConfigurer socialSecurityConfigurer;
 
-
-
-    /**
-     * 配置一个密码加密器
-     * @return
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
     @Bean
     public PersistentTokenRepository persistentTokenRepository(){
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
@@ -74,7 +60,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 //        super.configure(http);
 
-        formAuthenticationConfig.configure(http);
+        applyPasswordAuthenticationConfig(http);
 
         http.apply(validateCodeSecurityConfig)
                 .and()

@@ -1,4 +1,4 @@
-package com.isuwang.security.browser;
+package com.isuwang.security.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

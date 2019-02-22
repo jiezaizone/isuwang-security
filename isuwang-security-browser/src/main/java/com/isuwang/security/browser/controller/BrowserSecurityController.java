@@ -1,7 +1,7 @@
 package com.isuwang.security.browser.controller;
 
-import com.isuwang.security.browser.controller.support.SimpleResponse;
 import com.isuwang.security.core.properties.SecurityProperties;
+import com.isuwang.security.core.support.SimpleResponse;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
